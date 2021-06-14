@@ -1,0 +1,53 @@
+create table products (
+	id int primary key auto_increment,
+	title varchar(250),
+	thumbnail varchar(500),
+	content longtext,
+	price float,
+	created_at datetime,
+	updated_at datetime,
+    category_id int references category (id),
+    user_id int references user(id)
+);
+
+create table orders (
+	id int primary key auto_increment,
+	fullname varchar(100),
+	phone_number varchar(20),
+	email varchar(150),
+	address varchar(200),
+	order_date datetime
+);
+
+create table order_details (
+	id int primary key auto_increment,
+    number int,
+	price float,
+	order_id int references orders (id),
+	product_id int references products (id)
+	
+);
+
+create table catagory(
+    id int primary key auto_increment,
+    name varchar(50) not null,
+    created_at datetime,
+    updated_at datetime
+);
+
+create table if not exists users (
+	id int primary key auto_increment,
+	fullname varchar(50) not null,
+	email varchar(200) unique,
+	password varchar(32)
+);
+
+create table if not exists admin(
+	id int primary key auto_increment,
+	fullname varchar(250),
+	email varchar(200),
+	phone int,
+	address varchar(500),
+	token int 
+
+)
