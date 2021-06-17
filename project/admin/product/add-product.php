@@ -1,9 +1,18 @@
 <?php
-require_once('form-product.php');
+require_once('db/dbhelper.php');
+require_once('db/utility.php');
 
-$categoryList = executeResult('select * from category');
-$id = getGet('id'); 
-	$thisProduct = executeResult('select * from products where id = '.$id, true); 
+		$title = $thumbnail = $content = $price = $category_id = '';
+		if(!empty($_POST)) {
+			// $user = 
+			$title = getPost('title');
+			$thumbnail = getPost('thumbnail');
+			$content = getPost('content');
+			$price = getPost('price');
+			$category_id = getPost('category_id');
+			$created_at = $updated_at = date('Y-m-d H:i:s');
+
+		}
 ?>
 
 <!DOCTYPE html>
@@ -36,30 +45,35 @@ $id = getGet('id');
 				<form method="post">
 					<div class="form-group">
 					  <label for="title">Title:</label>
-					  <input required="true" type="text" class="form-control" id="title" name="title" value="<?=($thisProduct != null)?$thisProduct['title']:''?>">
-					  <input type="text" name="id" value="<?=($thisProduct != null)?$thisProduct['id']:''?>" style="display: none;">
+					  <input required="true" type="text" class="form-control" id="title" name="title" >
 					</div>
 					<div class="form-group">
 					  <label for="thumbnail">Thumbnail:</label>
-					  <input required="true" type="text" class="form-control" id="thumbnail" name="thumbnail" value="<?=($thisProduct != null)?$thisProduct['thumbnail']:''?>">
+					  <input required="true" type="text" class="form-control" id="thumbnail" name="thumbnail" >
 					</div>
 					<div class="form-group">
 					  <label for="content">Content:</label>
-					  <textarea class="form-control" id="content" name="content"><?=($thisProduct != null)?$thisProduct['content']:''?></textarea>
-					</div>
-					<div class="form-group">
-					    <label for="category_id">Category:</label>
-							<select class="form-control" id="category_id" name="category_id">
-								<option value="">-- Select --</option>
-								<option value="food children">Food children</option>
-								<option value="snack Food">Snack Food</option>
-								<option value="food healthy">Food healthy</option>
-					  		</select>
+					  <textarea class="form-control" id="content" name="content"></textarea>
 					</div>
 					<div class="form-group">
 					  <label for="price">Price:</label>
-					  <input type="number" class="form-control" id="price" name="price" value="<?=($thisProduct != null)?$thisProduct['price']:''?>">
+					  <input type="number" class="form-control" id="price" name="price" >
 					</div>
+					<div class="form-group">
+						<label for="category">Category</label>
+						<select class="form-control" name="cate_id" id="cate_id">
+							<option>Chọn Danh Mục:</option>
+								<?php 
+									$sql = "select * from category";
+									$productList = executeResult($sql);
+
+									foreach ($productList as $item) {
+										echo '<option value="'.$item['id'].'">'.$item['name'].'</option>';
+									}
+								?>
+						</select>
+					</div>
+					
 					<button class="btn btn-success">Save</button>
 					<button class="btn btn-danger"><a href="../admin/trangchucnang.php"> Back</a></button>
 				</form>
