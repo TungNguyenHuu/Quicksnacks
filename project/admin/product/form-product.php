@@ -2,7 +2,7 @@
 require_once('db/dbhelper.php');
 require_once('db/utility.php');
 
-
+$productList = executeResult('SELECT * from products');
 
 if(!empty($_POST)) {
 	$action = getPost('action');
@@ -12,11 +12,10 @@ if(!empty($_POST)) {
 			deleteProduct();
 			break;
 		default:
-			$id = getPost('id');
-		
-			if($id > 0) {
+			$id = getPost('id');		
+			if($id != '') {
 				updateProduct();
-			} else {
+			} else if ($id == '') {
 				addProduct();
 			}
 			break;
@@ -31,8 +30,8 @@ function deleteProduct() {
 }
 
 function addProduct() {
-	$title = $thumbnail = $content = $price  = $category_id = '';
-	// $user= validateToken();
+	$title = $thumbnail = $content = $price  = $category_id = $user_id = '';
+	$user= validateToken();
 	$title = getPost('title');
 	$thumbnail = getPost('thumbnail');
 	$content = getPost('content');	
@@ -47,7 +46,7 @@ function addProduct() {
 }
 
 function updateProduct() {
-	$title = $thumbnail = $content = $price = $category_id = '';
+	$title = $thumbnail = $content = $price = $category_id = $user_id =  '';
 	$user= $token = '';
 		if(isset($_COOKIE['token'])) {
 			$token = $_COOKIE['token'];
@@ -64,7 +63,7 @@ function updateProduct() {
 	$category_id = getPost('category_id');
 	$user_id = getPost('id');
 	$id = getPost('id'); 
-	$sql = "update products set title = '$title', thumbnail = '$thumbnail', content = '$content', price = '$price', updated_at = $updated_at, category_id = '$category_id',user_id = '$user_id' where id = $id";
+	$sql = "update products set title = '$title', thumbnail = '$thumbnail', content = '$content', price = '$price', updated_at = $updated_at, category_id = '$category_id',user_id = '$user_id' where id = ".$id;
 	execute($sql);
+	header('Location: product-list.php');die();
 }
-
