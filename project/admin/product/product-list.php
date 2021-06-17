@@ -1,7 +1,19 @@
 <?php
 require_once('../db/dbhelper.php');
 
-$productList = executeResult('select id, title, thumbnail, price, updated_at from products');
+$productList = executeResult('select id, title, thumbnail,content, price, created_at, updated_at, category_id, user_id from products'); 
+
+$delete = '';
+	if (isset($_GET['id'])) {
+		$delete = $_GET['id'];
+
+		if ($delete != '') {
+			$sql = 'delete from products where id= '.$delete;
+		}
+		execute($sql);
+		header('Location: add-product.php');
+		die();
+	}
 ?>
 
 <!DOCTYPE html>
@@ -47,8 +59,8 @@ $productList = executeResult('select id, title, thumbnail, price, updated_at fro
 									<td>'.(++$count).'</td>
 									<td>'.$item['title'].'</td>
 									<td><img src="'.$item['thumbnail'].'" style="width: 160px;"/></td>
-									<td>'.$item['Content'].'</td>
-									<td>'.$item['Price'].'</td>
+									<td>'.$item['content'].'</td>
+									<td>'.$item['price'].'</td>
 									<td><a href="add-product.php?id='.$item['id'].'"><button class="btn btn-warning">Edit</button></a></td>
 									<td><button class="btn btn-danger" onclick="deleteProduct('.$item['id'].')">Delete</button></td>
 								</tr>';
@@ -70,6 +82,7 @@ $productList = executeResult('select id, title, thumbnail, price, updated_at fro
 		}, function(date) {
 			location.reload()
 		})
+		
 	}
 </script>
 </body>
